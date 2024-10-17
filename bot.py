@@ -13,8 +13,11 @@ API_KEY = os.getenv("API_KEY")
 bot = telebot.TeleBot(TOKEN)
 
 def save_message(message):
-    with open("messages.log", "a", encoding="utf-8") as file:
-        file.write(f"{message.from_user.id}: {message.text}\n")
+    try:
+        with open("messages.log", "a", encoding="utf-8") as file:
+            file.write(f"{message.from_user.id}: {message.text}\n")
+    except Exception as e:
+        print(f"Error saving message: {e}")
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
