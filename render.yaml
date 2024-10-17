@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: youraya_telebot
+    env: python
+    plan: free
+    runtime: python3
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "bash start.sh"
+    envVars:
+      - key: TOKEN
+        value: ${TOKEN}
+      - key: API_KEY
+        value: ${API_KEY}

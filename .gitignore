@@ -133,3 +133,14 @@ dmypy.json
 .pyre/
 .static/
 .secrets.*
+
+# Исключение системных директорий и файлов
+AppData/
+Application Data/
+Cookies/
+Documents/
+Local Settings/
+NetHood/
+PrintHood/
+Recent/
+SendTo/

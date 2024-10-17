@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import telebot
 from pyowm import OWM
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+import pyowm.commons.exceptions
 
 load_dotenv()
 
@@ -22,43 +23,16 @@ def get_text_messages(message):
 
 
 @bot.message_handler(commands=['url'])
-def url(message):
+def send_url(message):
     markup = InlineKeyboardMarkup()
     btn_my_site = InlineKeyboardButton(text='Погода в Минске', url='https://yandex.by/pogoda/minsk')
     markup.add(btn_my_site)
     bot.send_message(message.chat.id, "Всегда актуальный прогноз для Минска", reply_markup=markup)
 
 
-# def gen_markup():
-#     markup = InlineKeyboardMarkup()
-#     markup.row_width = 2
-#     markup.add(InlineKeyboardButton("Yes", callback_data="cb_yes"),
-#                InlineKeyboardButton("No", callback_data="cb_no"))
-#
-#
-# @bot.callback_query_handler(func=lambda call: True)
-# def callback_query(call):
-#     if call.data == "cb_yes":
-#         bot.answer_callback_query(call.id, "Answer is Yes")
-#     elif call.data == "cb_no":
-#         bot.answer_callback_query(call.id, "Answer is No")
-#
-#
-# @bot.message_handler(func=lambda message: True)
-# def message_handler(message):
-#     bot.send_message(message.chat.id, "Yes/no?", reply_markup=gen_markup())
-
-
-# Обработчик команд '/start' и '/help'.
 @bot.message_handler(commands=['start', 'help'])
 def handle_start_help(message):
-    pass
-
-
-# Обработчик для документов и аудиофайлов
-# @bot.message_handler(content_types=['document', 'audio'])
-# def handle_document_audio(message):
-#     pass
+    bot.send_message(message.chat.id, "Привет! Я бот, который может помочь узнать погоду.")
 
 
 def get_weather(message):
@@ -70,10 +44,12 @@ def get_weather(message):
         bot.send_message(message.from_user.id, w[1])
         bot.send_message(message.from_user.id, 'Доброго времен суток! Введите название города')
         bot.register_next_step_handler(message, get_weather)
-    except Exception:
+    except pyowm.commons.exceptions.NotFoundError:
         bot.send_message(message.from_user.id, 'Упс... такого города нет в базе, попробуйте ещё раз')
         bot.send_message(message.from_user.id, 'Введите название города')
         bot.register_next_step_handler(message, get_weather)
+    except Exception as e:
+        bot.send_message(message.from_user.id, f'Произошла ошибка: {str(e)}')
 
 
 def get_location(lat, lon):
@@ -85,10 +61,11 @@ def weather(city: str):
     owm = OWM(API_KEY)
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
-    weather = observation.weather
+    current_weather = observation.weather
     location = get_location(observation.location.lat, observation.location.lon)
-    temperature = weather.temperature("celsius")
+    temperature = current_weather.temperature("celsius")
     return temperature, location
 
 
-bot.polling(none_stop=True, interval=0)
+if __name__ == '__main__':
+    bot.polling(none_stop=True, interval=0)
