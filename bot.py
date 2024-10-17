@@ -46,7 +46,6 @@ def get_weather(message):
         bot.register_next_step_handler(message, get_weather)
     except pyowm.commons.exceptions.NotFoundError:
         bot.send_message(message.from_user.id, 'Упс... такого города нет в базе, попробуйте ещё раз')
-        bot.send_message(message.from_user.id, 'Введите название города')
         bot.register_next_step_handler(message, get_weather)
     except Exception as e:
         bot.send_message(message.from_user.id, f'Произошла ошибка: {str(e)}')
