@@ -18,7 +18,7 @@ def save_message(message):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    save_message(message)
+    save_message(message)  # Save the incoming message
     if message.text == '/weather':
         bot.send_message(message.from_user.id, 'Введите название города')
         bot.register_next_step_handler(message, get_weather)
