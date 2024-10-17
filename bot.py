@@ -26,7 +26,7 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, 'Введите название города')
         bot.register_next_step_handler(message, get_weather)
     else:
-        bot.send_message(message.from_user.id, "Напиши или нажми /weather чтобы узнать погоду")
+        bot.send_message(message.from_user.id, "��апиши или нажми /weather чтобы узнать погоду")
 
 @bot.message_handler(commands=['url'])
 def send_url(message):
@@ -47,12 +47,12 @@ def get_weather(message):
                                                f' чувствуется как {round(w[0]["feels_like"])} градусов')
         bot.send_message(message.from_user.id, w[1])
         bot.send_message(message.from_user.id, 'Доброго времен суток! Введите название города')
-        bot.register_next_step_handler(message, get_weather)
     except pyowm.commons.exceptions.NotFoundError:
         bot.send_message(message.from_user.id, 'Упс... такого города нет в базе, попробуйте ещё раз')
-        bot.register_next_step_handler(message, get_weather)
     except Exception as e:
         bot.send_message(message.from_user.id, f'Произошла ошибка: {str(e)}')
+    finally:
+        bot.register_next_step_handler(message, get_weather)
 
 def get_location(lat, lon):
     url = f"https://yandex.ru/pogoda/maps/nowcast?lat={lat}&lon={lon}&via=hnav&le_Lighting=1"
