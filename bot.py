@@ -26,7 +26,7 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, 'Введите название города')
         bot.register_next_step_handler(message, get_weather)
     else:
-        bot.send_message(message.from_user.id, "Напиши /weather чтобы узнать погоду")
+        bot.send_message(message.from_user.id, "Напиши или нажми /weather чтобы узнать погоду")
 
 @bot.message_handler(commands=['url'])
 def send_url(message):
